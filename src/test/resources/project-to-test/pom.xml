@@ -9,7 +9,7 @@
   <name>Maven - Version plugin</name>
 
   <properties>
-    <querydsl.version>3.6.3</querydsl.version>
+    <querydsl.version>3.7.4</querydsl.version>
   </properties>
 
   <build>
@@ -52,4 +52,3 @@
   </build>
 
 </project>
-  

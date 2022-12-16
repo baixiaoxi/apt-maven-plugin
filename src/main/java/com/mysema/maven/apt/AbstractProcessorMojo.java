@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2009 Mysema Ltd.
  * All rights reserved.
- * 
+ *
  */
 package com.mysema.maven.apt;
 
@@ -35,9 +35,9 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * Base class for AnnotationProcessorMojo implementations
- * 
+ *
  * @author tiwe
- * 
+ *
  */
 public abstract class AbstractProcessorMojo extends AbstractMojo {
 
@@ -81,18 +81,18 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
 
     /**
      * A list of inclusion package filters for the apt processor.
-     * 
+     *
      * If not specified all sources will be used for apt processor
-     * 
+     *
      * <pre>
      * e.g.:
      * &lt;includes&gt;
      * 	&lt;include&gt;com.mypackge.**.bo.**&lt;/include&gt;
      * &lt;/includes&gt;
      * </pre>
-     * 
+     *
      * will include all files which match com/mypackge/ ** /bo/ ** / *.java
-     * 
+     *
      * @parameter
      */
     private Set<String> includes = new HashSet<String>();
@@ -202,11 +202,11 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
         if (options != null) {
             for (Map.Entry<String, String> entry : options.entrySet()) {
                 if (entry.getValue() != null) {
-                    compilerOpts.put("A" + entry.getKey() + "=" + entry.getValue(), null);    
+                    compilerOpts.put("A" + entry.getKey() + "=" + entry.getValue(), null);
                 } else {
                     compilerOpts.put("A" + entry.getKey() + "=", null);
                 }
-                
+
             }
         }
 
@@ -217,7 +217,7 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
         if (!showWarnings) {
             compilerOpts.put("nowarn", null);
         }
-        
+
         StringBuilder builder = new StringBuilder();
         for (File file : getSourceDirectories()) {
             if (builder.length() > 0) {
@@ -248,10 +248,10 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
      * Filter files for apt processing based on the {@link #includes} filter and
      * also taking into account m2e {@link BuildContext} to filter-out unchanged
      * files when invoked as incremental build
-     * 
+     *
      * @param directories
      *            source directories in which files are located for apt processing
-     * 
+     *
      * @return files for apt processing. Returns empty set when there is no
      *         files to process
      */
@@ -263,13 +263,13 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
                 filters[i] = filters[i].replace('.', '/') + JAVA_FILE_FILTER;
             }
         }
-        
-        Set<File> files = new HashSet<File>();        
+
+        Set<File> files = new HashSet<File>();
         for (File directory : directories) {
             // support for incremental build in m2e context
             Scanner scanner = buildContext.newScanner(directory, false);
             scanner.setIncludes(filters);
-            scanner.scan();            
+            scanner.scan();
             String[] includedFiles = scanner.getIncludedFiles();
 
             // check also for possible deletions
@@ -291,7 +291,7 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
             if (includedFiles != null) {
                 for (String includedFile : includedFiles) {
                     files.add(new File(scanner.getBasedir(), includedFile));
-                }        
+                }
             }
         }
         return files;
@@ -334,11 +334,11 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         if (getOutputDirectory() == null) {
         	return;
-        }        
+        }
         if ("true".equals(System.getProperty("maven.apt.skip"))) {
         	return;
         }
-        
+
         if (!getOutputDirectory().exists()) {
             getOutputDirectory().mkdirs();
         }
@@ -418,7 +418,7 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
         } catch (Exception e1) {
             getLog().error("execute error", e1);
             throw new MojoExecutionException(e1.getMessage(), e1);
-            
+
         } finally {
             if (fileManager != null) {
                 try {
@@ -431,19 +431,19 @@ public abstract class AbstractProcessorMojo extends AbstractMojo {
     }
 
     protected abstract File getOutputDirectory();
-    
+
     @SuppressWarnings("unchecked")
     protected Set<File> getSourceDirectories() {
         File outputDirectory = getOutputDirectory();
         String outputPath = outputDirectory.getAbsolutePath();
-        Set<File> directories = new HashSet<File>();        
+        Set<File> directories = new HashSet<File>();
         List<String> directoryNames = isForTest() ? getTestCompileSourceRoots()
                                                   : getCompileSourceRoots();
         for (String name : directoryNames) {
             File file = new File(name);
             if (!file.getAbsolutePath().equals(outputPath) && file.exists() && file.isDirectory()) {
-                directories.add(file);    
-            }            
+                directories.add(file);
+            }
         }
         return directories;
     }
